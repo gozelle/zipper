@@ -1,8 +1,5 @@
-github.com/gozelle/vfs v0.0.0-20230114073002-ef4621f62049 h1:xyOkvvCBfVxesE1sMunxLvvTADBPB97E/d/AzxD6v9E=
-github.com/gozelle/vfs v0.0.0-20230114073002-ef4621f62049/go.mod h1:lmXojMZsBfmn6X/dg3ItqgaALpMlsXCWu2m1LnNEvGM=
-github.com/gozelle/vfs v0.0.0-20230114163506-a4b311fed2b4 h1:2pREcvxmGU01HPmwMKO0BOG1KM9n3I6NhRZk6rLV7VY=
-github.com/gozelle/vfs v0.0.0-20230114163506-a4b311fed2b4/go.mod h1:lmXojMZsBfmn6X/dg3ItqgaALpMlsXCWu2m1LnNEvGM=
-github.com/gozelle/vfs v0.0.0-20230114170656-97e71e11dc7e h1:GpV560cdikP9k+UReTQaS37h9adOOs7TLGI2D2TYbj4=
-github.com/gozelle/vfs v0.0.0-20230114170656-97e71e11dc7e/go.mod h1:lmXojMZsBfmn6X/dg3ItqgaALpMlsXCWu2m1LnNEvGM=
+github.com/gozelle/vfs v0.0.0-20230116053736-71278df79275 h1:M78B6y+Hhxb19S1vQFzEOW1Azagp0MH7r+l7/8yr5Do=
+github.com/gozelle/vfs v0.0.0-20230116053736-71278df79275/go.mod h1:lmXojMZsBfmn6X/dg3ItqgaALpMlsXCWu2m1LnNEvGM=
 github.com/shurcooL/httpfs v0.0.0-20190707220628-8d4bc4ba7749 h1:bUGsEnyNbVPw06Bs80sCeARAlK8lhwqGyi6UT8ymuGk=
 github.com/shurcooL/httpfs v0.0.0-20190707220628-8d4bc4ba7749/go.mod h1:ZY1cvUeJuFPAdZ/B6v7RHavJWZn2YPVFQ1OSXhCGOkg=
+golang.org/x/tools v0.5.0 h1:+bSpV5HIeWkuvgaMfI3UmKRThoTA5ODJTUd8T17NO+4=

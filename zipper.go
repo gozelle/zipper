@@ -2,6 +2,7 @@ package zipper
 
 import (
 	"archive/zip"
+	"bytes"
 	"fmt"
 	"github.com/gozelle/vfs"
 	"io"
@@ -11,7 +12,7 @@ import (
 	"strings"
 )
 
-type WriteableFileSystem interface {
+type WriteableFS interface {
 	http.FileSystem
 	Write(dir, file string) error
 }
@@ -19,12 +20,12 @@ type WriteableFileSystem interface {
 type Option func(c *Config)
 
 type Config struct {
-	sourceReader io.Reader
+	sourceReader []interface{}
 	sourceDir    string
 	sourceFile   string
 	sourceFs     http.FileSystem
 	targetWriter io.Writer
-	targetFs     WriteableFileSystem
+	targetFs     WriteableFS
 	targetFile   string
 	targetForce  bool
 }
@@ -62,9 +63,9 @@ func WithSourceDir(dir string) Option {
 	}
 }
 
-func WithSourceReader(reader io.Reader) Option {
+func WithSourceReader(filename string, reader io.Reader) Option {
 	return func(c *Config) {
-		c.sourceReader = reader
+		c.sourceReader = []interface{}{filename, reader}
 	}
 }
 
@@ -86,7 +87,7 @@ func WithTargetFile(file string) Option {
 	}
 }
 
-func WithTargetFileSystem(wfs WriteableFileSystem) Option {
+func WithTargetFileSystem(wfs WriteableFS) Option {
 	return func(c *Config) {
 		c.targetFs = wfs
 	}
@@ -113,16 +114,54 @@ func Zip(options ...Option) (err error) {
 		return
 	}
 	
-	var out io.Writer
-	if c.targetWriter != nil {
-		out = c.targetWriter
-	}
+	out := &bytes.Buffer{}
 	
 	if c.sourceFs != nil {
 		err = zipFileSystem(c.sourceFs, out)
 		if err != nil {
 			return
 		}
+	}
+	
+	if c.targetWriter != nil {
+		_, err = c.targetWriter.Write(out.Bytes())
+		if err != nil {
+			return
+		}
+	}
+	
+	if c.targetFile != "" {
+		err = zipToFile(c.targetForce, c.targetFile, out)
+		if err != nil {
+			return
+		}
+	}
+	
+	return
+}
+
+func zipToFile(force bool, file string, out *bytes.Buffer) (err error) {
+	
+	_, err = os.Stat(file)
+	if err != nil {
+		if !os.IsNotExist(err) {
+			return
+		}
+	}
+	
+	if !force {
+		err = fmt.Errorf("target: %s exist, please use force mod", file)
+		return
+	}
+	
+	f, err := os.Create(file)
+	if err != nil {
+		return
+	}
+	
+	_, err = f.Write(out.Bytes())
+	if err != nil {
+		return
 	}
 	
 	return
@@ -154,7 +193,7 @@ func zipFileSystem(fs http.FileSystem, out io.Writer) (err error) {
 		if !fh.Mode().IsRegular() {
 			return
 		}
-		fr, err := os.Open(path)
+		fr, err := fs.Open(path)
 		defer func() {
 			_ = fr.Close()
 		}()
